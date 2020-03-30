@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>a54c0a1c-7f0a-4e2d-8f83-1b9a13ccf23b</Guid>
+    <Name>Dual Wield Melee</Name>
+    <Description>Adds dual wield melee to Xcom 2
+
+tags = WotC, War of the Chosen, Item, Weapon, Dual Wield, Niten Ichi-Ryu, Miyamoto Musashi, Finally, Gameplay</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>DualWieldMelee</AssemblyName>
+    <RootNamespace>DualWieldMelee</RootNamespace>
+    <ProjectGuid>{0d743952-7b3b-4589-b3f0-0c193ae58a6b}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Localization\" />
+    <Folder Include="Content" />
+    <Folder Include="Src\" />
+    <Folder Include="Src\DualWieldMelee\" />
+    <Folder Include="Src\DualWieldMelee\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\XComClassData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComDualWieldMelee.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComGameData.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComGameData_SoldierSkills.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComStealthOverhaul.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\CIN_SkyrangerIntrosDualMelee.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\DualSword.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\ShellDualMelee.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ReadMe.txt" />
+    <Content Include="ModPreview.jpg" />
+    <Content Include="Config\XComEditor.ini" />
+    <Content Include="Config\XComEngine.ini" />
+    <Content Include="Config\XComGame.ini" />
+    <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\DualWieldMelee\Classes\DropShipMatinee_Actor.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\MSEventListenerTemplate.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\MSEventListener_StrategyListener.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\ShellMapMatinee.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Ability_DualWieldMelee.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Action_ApplyDamageSpacer.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Condition_DualMelee.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Data_DualWieldMelee.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2DownloadableContentInfo_DualWieldMelee.uc" />
+    <Content Include="Src\DualWieldMelee\Classes\X2Effect_ApplySecondaryWeaponDamage.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Effect_DualWeaponDamagePenalty.uc">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Src\DualWieldMelee\Classes\X2Effect_SecondarySlash_DamagePreview.uc">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+</Project>
