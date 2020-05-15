@@ -243,7 +243,7 @@ static function PatchMeleeWeaponTemplates()
 				foreach WeaponTemplate.Abilities (AbilityName)
 				{
 					Ability = AbilityTemplateManager.FindAbilityTemplate(AbilityName);
-					if (Ability != none && Ability.IsMelee())
+					if (Ability != none && Ability.IsMelee() && default.PatchMeleeAbilityBlackList.Find(Ability.DataName) == INDEX_NONE)
 					{
 						Ability.bUniqueSource = true;
 						//`Log(Ability.DataName $ ".bUniqueSource = true", default.bLog, 'DualWieldMelee');
