@@ -12,6 +12,8 @@ var config array<SocketReplacementInfo> SocketReplacements;
 var config bool bHideSheaths;
 var config bool bLog;
 
+var config array<name> PatchMeleeAbilityBlackList;
+
 static event OnPostTemplatesCreated()
 {
 	PatchMeleeWeaponTemplates();
@@ -38,12 +40,12 @@ static function UpdateWeaponAttachments(out array<WeaponAttachment> Attachments,
 		return;
 	}
 
-	if(IsPrimaryMeleeWeaponTemplate(X2WeaponTemplate(ItemState.GetMyTemplate())))
+	if(IsPrimaryMeleeWeaponTemplate(ItemState))
 	{
 		NewSocket = 'LeftSheath';
 	}
 
-	if(IsSecondaryMeleeWeaponTemplate(X2WeaponTemplate(ItemState.GetMyTemplate())))
+	if(IsSecondaryMeleeWeaponTemplate(ItemState))
 	{
 		NewSocket = 'RightSheath';
 	}
@@ -119,7 +121,7 @@ static function WeaponInitialized(XGWeapon WeaponArchetype, XComWeapon Weapon, o
 	{
 		`LOG(default.Class.Name @ GetFuncName() @ UnitState.GetFullName() @ "HasDualMeleeEquipped", default.bLog, 'DualWieldMelee');
 
-		if(IsPrimaryMeleeWeaponTemplate(WeaponTemplate))
+		if(IsPrimaryMeleeWeaponTemplate(ItemState))
 		{
 			Weapon.DefaultSocket = 'R_Hand';
 			`LOG(default.Class.Name @ GetFuncName() @ "Patching socket to R_Hand", default.bLog, 'DualWieldMelee');
@@ -129,7 +131,7 @@ static function WeaponInitialized(XGWeapon WeaponArchetype, XComWeapon Weapon, o
 			Weapon.WeaponFireKillAnimSequenceName = 'FF_MeleeKill';
 		}
 
-		if(IsSecondaryMeleeWeaponTemplate(WeaponTemplate))
+		if(IsSecondaryMeleeWeaponTemplate(ItemState))
 		{
 			Weapon.DefaultSocket = 'L_Hand';
 			`LOG(default.Class.Name @ GetFuncName() @ "Patching socket to L_Hand", default.bLog, 'DualWieldMelee');
@@ -170,9 +172,6 @@ static function string DLCAppendSockets(XComUnitPawn Pawn)
 	return "";
 }
 
-
-
-
 static function PatchMeleeWeaponTemplates()
 {
 	local X2ItemTemplateManager ItemTemplateManager;
@@ -197,7 +196,7 @@ static function PatchMeleeWeaponTemplates()
 	foreach AbilityTemplateManager.IterateTemplates (AbilityDataTemplate, none)
 	{
 		Ability = X2AbilityTemplate(AbilityDataTemplate);
-		if (Ability != none && X2AbilityToHitCalc_StandardMelee(Ability.AbilityToHitCalc) != none)
+		if (Ability != none && Ability.IsMelee() && default.PatchMeleeAbilityBlackList.Find(Ability.DataName) == INDEX_NONE)
 		{
 			// Prevent inception
 			if ( class'X2Ability_DualWieldMelee'.default.ABILITIES_DO_NOT_TRIGGER_SECONDARY_SLASH.Find(Ability.DataName) == INDEX_NONE)
@@ -239,13 +238,12 @@ static function PatchMeleeWeaponTemplates()
 			if (WeaponTemplate == none)
 				continue;
 
-			
 			if (IsMeleeWeaponTemplate(WeaponTemplate))
 			{
 				foreach WeaponTemplate.Abilities (AbilityName)
 				{
 					Ability = AbilityTemplateManager.FindAbilityTemplate(AbilityName);
-					if (Ability != none)
+					if (Ability != none && Ability.IsMelee())
 					{
 						Ability.bUniqueSource = true;
 						//`Log(Ability.DataName $ ".bUniqueSource = true", default.bLog, 'DualWieldMelee');
@@ -291,32 +289,43 @@ static function UpdateAnimations(out array<AnimSet> CustomAnimSets, XComGameStat
 
 
 
-static function bool IsPrimaryMeleeWeaponTemplate(X2WeaponTemplate WeaponTemplate)
+static function bool IsPrimaryMeleeWeaponTemplate(XComGameState_Item ItemState)
 {
+	local X2WeaponTemplate WeaponTemplate;
+
+	WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
 	return WeaponTemplate != none &&
-		WeaponTemplate.InventorySlot == eInvSlot_PrimaryWeapon && 
+		ItemState.InventorySlot == eInvSlot_PrimaryWeapon && 
 		IsMeleeWeaponTemplate(WeaponTemplate);
 }
 
-static function bool IsSecondaryMeleeWeaponTemplate(X2WeaponTemplate WeaponTemplate)
+static function bool IsSecondaryMeleeWeaponTemplate(XComGameState_Item ItemState)
 {
+	local X2WeaponTemplate WeaponTemplate;
+
+	WeaponTemplate = X2WeaponTemplate(ItemState.GetMyTemplate());
+
 	return WeaponTemplate != none &&
-		WeaponTemplate.InventorySlot == eInvSlot_SecondaryWeapon && 
+		ItemState.InventorySlot == eInvSlot_SecondaryWeapon && 
 		IsMeleeWeaponTemplate(WeaponTemplate);
 }
 
 static function bool HasDualMeleeEquipped(XComGameState_Unit UnitState, optional XComGameState CheckGameState)
 {
-	return IsPrimaryMeleeWeaponTemplate(X2WeaponTemplate(UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, CheckGameState).GetMyTemplate())) &&
-		IsSecondaryMeleeWeaponTemplate(X2WeaponTemplate(UnitState.GetItemInSlot(eInvSlot_SecondaryWeapon, CheckGameState).GetMyTemplate()));
+	if (UnitState == none || !UnitState.IsSoldier())
+	{
+		return false;
+	}
+
+	return IsPrimaryMeleeWeaponTemplate(UnitState.GetItemInSlot(eInvSlot_PrimaryWeapon, CheckGameState)) &&
+		IsSecondaryMeleeWeaponTemplate(UnitState.GetItemInSlot(eInvSlot_SecondaryWeapon, CheckGameState));
 }
 
 static function bool IsMeleeWeaponTemplate(X2WeaponTemplate WeaponTemplate)
 {
 	return WeaponTemplate != none && WeaponTemplate.iRange == 0 &&
-		WeaponTemplate.WeaponCat != 'wristblade' &&
-		WeaponTemplate.WeaponCat != 'shield' &&
-		WeaponTemplate.WeaponCat != 'gauntlet';
+		class'X2Data_DualWieldMelee'.default.MeleeCategories.Find(WeaponTemplate.WeaponCat) != INDEX_NONE;
 }
 
 

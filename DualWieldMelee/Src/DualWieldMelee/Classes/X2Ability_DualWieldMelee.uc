@@ -128,7 +128,6 @@ static function EventListenerReturn AbilityTriggerEventListener_DualSlashSeconda
     local XComGameState_Unit            SourceUnit;
     local XComGameState_Ability         TriggeringAbilityState;
     local XComGameState_Ability         SecondarySlashAbilityState;
-	local X2WeaponTemplate				WeaponTemplate;
 	local XComGameState_Item			SourceWeapon;
 
     SourceUnit = XComGameState_Unit(EventSource);
@@ -151,8 +150,7 @@ static function EventListenerReturn AbilityTriggerEventListener_DualSlashSeconda
 	SourceWeapon = TriggeringAbilityState.GetSourceWeapon();
 	if (SourceWeapon != none)
 	{
-		WeaponTemplate = X2WeaponTemplate(SourceWeapon.GetMyTemplate());
-		if (WeaponTemplate == none || !class'X2DownloadableContentInfo_DualWieldMelee'.static.IsPrimaryMeleeWeaponTemplate(WeaponTemplate) || !TriggeringAbilityState.IsMeleeAbility())
+		if (!class'X2DownloadableContentInfo_DualWieldMelee'.static.IsPrimaryMeleeWeaponTemplate(SourceWeapon) || !TriggeringAbilityState.IsMeleeAbility())
 		{
 			return ELR_NoInterrupt;
 		}
@@ -189,7 +187,6 @@ function MergeVisualization(X2Action BuildTree, out X2Action VisualizationTree)
 	local array<X2Action>					arrActions;
 	local X2Action							Action, FirstFireAction, SecondFireAction, SpacerAction;
 	local int i;
-	local Actor								SourceVisualizer;
 	local VisualizationActionMetadata		ActionMetadata;
 	local XComGameStateContext_Ability		FirstAbilityContext, SecondAbilityContext;
 	local StateObjectReference				Target;
