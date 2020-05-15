@@ -32,7 +32,18 @@ static function UpdateWeaponAttachments(out array<WeaponAttachment> Attachments,
 	local name NewSocket;
 	local SkeletalMeshSocket Socket;
 
+	if (ItemState == none || ItemState.OwnerStateObject.ObjectID <= 0)
+	{
+		return;
+	}
+
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ItemState.OwnerStateObject.ObjectID));
+
+	if (UnitState == none)
+	{
+		return;
+	}
+
 	Pawn = XGUnit(UnitState.GetVisualizer()).GetPawn();
 
 	if(!HasDualMeleeEquipped(UnitState))
@@ -205,7 +216,7 @@ static function PatchMeleeWeaponTemplates()
 
 				Ability.bUniqueSource = true;
 				Ability.AddTargetEffect(DamagePreviewEffect);
-				//`Log(Ability.DataName @ "adding PostActivationEvents DualSlashSecondary", default.bLog, 'DualWieldMelee');
+				`Log(Ability.DataName @ "adding PostActivationEvents DualSlashSecondary", default.bLog, 'DualWieldMelee');
 			}
 		}
 
@@ -246,7 +257,7 @@ static function PatchMeleeWeaponTemplates()
 					if (Ability != none && Ability.IsMelee() && default.PatchMeleeAbilityBlackList.Find(Ability.DataName) == INDEX_NONE)
 					{
 						Ability.bUniqueSource = true;
-						//`Log(Ability.DataName $ ".bUniqueSource = true", default.bLog, 'DualWieldMelee');
+						`Log(Ability.DataName $ ".bUniqueSource = true", default.bLog, 'DualWieldMelee');
 					}
 				}
 
