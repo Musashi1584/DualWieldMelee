@@ -11,6 +11,9 @@ tags = WotC, War of the Chosen, Item, Weapon, Dual Wield, Niten Ichi-Ryu, Miyamo
     <RootNamespace>DualWieldMelee</RootNamespace>
     <ProjectGuid>{0d743952-7b3b-4589-b3f0-0c193ae58a6b}</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
     <Folder Include="Localization\" />

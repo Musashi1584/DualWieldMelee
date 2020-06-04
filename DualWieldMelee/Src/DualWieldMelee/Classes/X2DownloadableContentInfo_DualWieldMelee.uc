@@ -63,7 +63,7 @@ static function UpdateWeaponAttachments(out array<WeaponAttachment> Attachments,
 
 	if (NewSocket != '')
 	{
-		for (i = Attachments.Length; i >= 0; i--)
+		for (i = Attachments.Length - 1; i >= 0; i--)
 		{
 			if (Attachments[i].AttachToPawn && Attachments[i].AttachSocket == 'Sheath')
 			{
@@ -207,10 +207,13 @@ static function PatchMeleeWeaponTemplates()
 	foreach AbilityTemplateManager.IterateTemplates (AbilityDataTemplate, none)
 	{
 		Ability = X2AbilityTemplate(AbilityDataTemplate);
-		if (Ability != none && Ability.IsMelee() && default.PatchMeleeAbilityBlackList.Find(Ability.DataName) == INDEX_NONE)
+		if (Ability != none &&
+			Ability.IsMelee() &&
+			default.PatchMeleeAbilityBlackList.Find(Ability.DataName) == INDEX_NONE)
 		{
+			`Log(GetFuncName() @ Ability.DataName, default.bLog, 'DualWieldMelee');
 			// Prevent inception
-			if ( class'X2Ability_DualWieldMelee'.default.ABILITIES_DO_NOT_TRIGGER_SECONDARY_SLASH.Find(Ability.DataName) == INDEX_NONE)
+			if (class'X2Ability_DualWieldMelee'.default.ABILITIES_DO_NOT_TRIGGER_SECONDARY_SLASH.Find(Ability.DataName) == INDEX_NONE)
 			{
 				Ability.PostActivationEvents.AddItem('DualSlashSecondary');
 

@@ -7,9 +7,12 @@ Project("{5DAE07AF-E217-45C1-8DE7-FF99D6011E8A}") = "DualWieldMelee", "DualWield
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|XCOM 2 = Debug|XCOM 2
 		Default|XCOM 2 = Default|XCOM 2
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D743952-7B3B-4589-B3F0-0C193AE58A6B}.Debug|XCOM 2.ActiveCfg = Debug|XCOM 2
+		{0D743952-7B3B-4589-B3F0-0C193AE58A6B}.Debug|XCOM 2.Build.0 = Debug|XCOM 2
 		{0D743952-7B3B-4589-B3F0-0C193AE58A6B}.Default|XCOM 2.ActiveCfg = Default|XCOM 2
 		{0D743952-7B3B-4589-B3F0-0C193AE58A6B}.Default|XCOM 2.Build.0 = Default|XCOM 2
 	EndGlobalSection

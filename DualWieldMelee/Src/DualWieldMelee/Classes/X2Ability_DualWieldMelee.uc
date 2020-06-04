@@ -124,27 +124,29 @@ static function X2AbilityTemplate DualSlashSecondary()
 
 static function EventListenerReturn AbilityTriggerEventListener_DualSlashSecondary(Object EventData, Object EventSource, XComGameState GameState, Name EventID, Object CallbackData)
 {
-    local XComGameStateContext_Ability  AbilityContext;
-    local XComGameState_Unit            SourceUnit;
-    local XComGameState_Ability         TriggeringAbilityState;
-    local XComGameState_Ability         SecondarySlashAbilityState;
+	local XComGameStateContext_Ability  AbilityContext;
+	local XComGameState_Unit            SourceUnit;
+	local XComGameState_Ability         TriggeringAbilityState;
+	local XComGameState_Ability         SecondarySlashAbilityState;
 	local XComGameState_Item			SourceWeapon;
 
-    SourceUnit = XComGameState_Unit(EventSource);
-    AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
+	SourceUnit = XComGameState_Unit(EventSource);
+	AbilityContext = XComGameStateContext_Ability(GameState.GetContext());
 	TriggeringAbilityState = XComGameState_Ability(EventData);
-    SecondarySlashAbilityState = XComGameState_Ability(CallbackData);
+	SecondarySlashAbilityState = XComGameState_Ability(CallbackData);
 
-    if (AbilityContext.InterruptionStatus == eInterruptionStatus_Interrupt || TriggeringAbilityState == none || SourceUnit == none || AbilityContext == none || SecondarySlashAbilityState == none)
-    {
-        return ELR_NoInterrupt;
-    }
+	if (AbilityContext.InterruptionStatus == eInterruptionStatus_Interrupt || TriggeringAbilityState == none || SourceUnit == none || AbilityContext == none || SecondarySlashAbilityState == none)
+	{
+		return ELR_NoInterrupt;
+	}
 	
 	//	Includes DualSlashSecondary to prevent inception.
 	if (default.ABILITIES_DO_NOT_TRIGGER_SECONDARY_SLASH.Find(TriggeringAbilityState.GetMyTemplateName()) != INDEX_NONE)
 	{
-        return ELR_NoInterrupt;
-    }
+		return ELR_NoInterrupt;
+	}
+
+	`LOG("Secondary Slash on: " @ SecondarySlashAbilityState.GetSourceWeapon().GetMyTemplateName() @ SecondarySlashAbilityState.GetSourceWeapon().InventorySlot @ "triggered by:" @ SourceUnit.GetFullName(), class'X2DownloadableContentInfo_DualWieldMelee'.default.bLog, 'DualWieldMelee');
 
 	//	Exit Listener if the Triggering Ability is not attached to a primary melee weapon, or it's not a melee ability.
 	SourceWeapon = TriggeringAbilityState.GetSourceWeapon();
@@ -163,19 +165,20 @@ static function EventListenerReturn AbilityTriggerEventListener_DualSlashSeconda
 	//	return ELR_NoInterrupt;
 	//}
 
-    //  Activate Second Rapid Fire Shot against the same target the Triggering Ability was activated.
-    if (SecondarySlashAbilityState.AbilityTriggerAgainstSingleTarget(AbilityContext.InputContext.PrimaryTarget, false, GameState.HistoryIndex))
-    {
-        //  Secondary Slash has activated successfully.
+	//  Activate Second Rapid Fire Shot against the same target the Triggering Ability was activated.
+	if (SecondarySlashAbilityState.AbilityTriggerAgainstSingleTarget(AbilityContext.InputContext.PrimaryTarget, false, GameState.HistoryIndex))
+	{
+		//  Secondary Slash has activated successfully.
 		
 		`LOG("Secondary Slash on: " @ SecondarySlashAbilityState.GetSourceWeapon().GetMyTemplateName() @ SecondarySlashAbilityState.GetSourceWeapon().InventorySlot @ "triggered by:" @ SourceUnit.GetFullName() @ "using ability: " @ TriggeringAbilityState.GetMyTemplateName() @ "at Index: " @ GameState.HistoryIndex, class'X2DownloadableContentInfo_DualWieldMelee'.default.bLog, 'DualWieldMelee');
-    }
-    else 
-    {
-        //  Secondary Slash has failed to activate.
-    }
+	}
+	else 
+	{
+		`LOG("Warning: Secondary Slash FAILED on: " @ SecondarySlashAbilityState.GetSourceWeapon().GetMyTemplateName() @ SecondarySlashAbilityState.GetSourceWeapon().InventorySlot @ "triggered by:" @ SourceUnit.GetFullName() @ "using ability: " @ TriggeringAbilityState.GetMyTemplateName() @ "at Index: " @ GameState.HistoryIndex, class'X2DownloadableContentInfo_DualWieldMelee'.default.bLog, 'DualWieldMelee');
+		//  Secondary Slash has failed to activate.
+	}
 
-    return ELR_NoInterrupt;
+	return ELR_NoInterrupt;
 }
 
 // BuildTree vis of the current ability

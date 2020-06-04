@@ -93,7 +93,7 @@ static function PatchSingleMatinee(SeqAct_Interp SeqInterp)
 				AnimControl = InterpTrackAnimControl(Track);
 				if (AnimControl != none)
 				{
-					for (KeyIndex = 0; KeyIndex <= AnimControl.AnimSeqs.Length; KeyIndex++)
+					for (KeyIndex = 0; KeyIndex <= AnimControl.AnimSeqs.Length - 1; KeyIndex++)
 					{
 						if (PatchSequenceNames.Find(AnimControl.AnimSeqs[KeyIndex].AnimSeqName) != INDEX_NONE)
 						{
