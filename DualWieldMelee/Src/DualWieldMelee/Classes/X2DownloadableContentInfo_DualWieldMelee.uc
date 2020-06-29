@@ -39,7 +39,7 @@ static function UpdateWeaponAttachments(out array<WeaponAttachment> Attachments,
 
 	UnitState = XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ItemState.OwnerStateObject.ObjectID));
 
-	if (UnitState == none)
+	if (UnitState == none || UnitState.GetVisualizer() == none)
 	{
 		return;
 	}
@@ -104,7 +104,7 @@ static function FinalizeUnitAbilitiesForInit(XComGameState_Unit UnitState, out a
 	// Associate all melee abilities with the primary weapon if dual melee weapons are equipped
 	if (UnitState.IsSoldier() && HasDualMeleeEquipped(UnitState))
 	{
-		for(Index = 0; Index <= SetupData.Length; Index++)
+		for(Index = 0; Index <= SetupData.Length - 1; Index++)
 		{
 			if (SetupData[Index].Template != none && SetupData[Index].Template.IsMelee() &&  class'X2Ability_DualWieldMelee'.default.ABILITIES_DO_NOT_TRIGGER_SECONDARY_SLASH.Find(SetupData[Index].TemplateName) == INDEX_NONE)
 			{
